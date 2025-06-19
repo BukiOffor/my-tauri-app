@@ -34,10 +34,10 @@ jobs:
 
       - name: Node.js setup
         uses: actions/setup-node@v3
+
         # NOTE: enterprise developers may hard code a version
         with:
           node-version: latest
-          # node-version-file: '.nvmrc'
 
       - name: Install Rust (Stable)
         run:
@@ -50,7 +50,10 @@ jobs:
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
       - name: Install app dependencies and build web
         # NOTE: include yarn build if frontend has build script
-        run: yarn install --frozen-lockfile # && yarn build
+        #run: yarn install --frozen-lockfile # && yarn build
+        run: yarn install --frozen-lockfile && node ./utils/index.js
+
+        
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
