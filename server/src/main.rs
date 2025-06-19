@@ -9,6 +9,16 @@ struct UpdateResponse {
     platforms: Platforms,
 }
 
+
+#[derive(Serialize)]
+struct V2Response {
+    version: String,
+    notes: String,
+    pub_date: String,
+    url: String,
+}
+
+
 #[derive(Serialize)]
 struct Platforms {
     darwin: Option<PlatformMetadata>,
@@ -73,6 +83,18 @@ async fn tauri_update(path: web::Path<(String, String)>) -> impl Responder {
     };
 
     HttpResponse::Ok().json(update_info)
+}
+
+
+#[get("/v2/updates/{platform}/{version}")]
+async fn tauri_update_handler(path: web::Path<(String, String)>) -> impl Responder {
+   HttpResponse::Ok().json(V2Response{
+        url: "https://mycompany.example.com/myapp/releases/myrelease.tar.gz".into(),
+        version: "v1.0.1".into(),
+        notes: "Theses are some release notes".into(),
+        pub_date: "2020-09-18T12:29:53+01:00".into(),
+        
+    })
 }
 
 #[actix_web::main]
