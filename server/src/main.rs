@@ -82,7 +82,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .service(tauri_update)
     })
-    .bind(("127.0.0.1", 8000))?
+    .bind(("0.0.0.0", 8088))?
     .run()
     .await
 }
