@@ -22,7 +22,7 @@ struct PlatformMetadata {
     url: String,
 }
 
-const LATEST_VERSION: &str = "1.2.0";
+const LATEST_VERSION: &str = "v1.2.0";
 
 #[get("/v1/updates/{platform}/{version}")]
 async fn tauri_update(path: web::Path<(String, String)>) -> impl Responder {
