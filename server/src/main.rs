@@ -17,7 +17,7 @@ struct V2Response {
 }
 
 
-const LATEST_VERSION: &str = "v1.2.0";
+const LATEST_VERSION: &str = "v1.0.0";
 
 
 #[get("/v2/updates/{platform}/{version}")]
@@ -30,9 +30,9 @@ async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
         return HttpResponse::NoContent().finish();
     }
    HttpResponse::Ok().json(V2Response{
-        url: " https://my-tauri-app.onrender.com/download/test-tauri-build_aarch64.app.tar.gz".into(),
+        url: "https://my-tauri-app.onrender.com/download/test-tauri-build_aarch64.app.tar.gz".into(),
         //url: "http://127.0.0.1:8088/download/test-tauri-build_aarch64.app.tar.gz".into(), 
-        version: "v1.0.1".into(),
+        version: "v1.0.0".into(),
         notes: "Theses are some release notes".into(),
         pub_date: "2020-09-18T12:29:53+01:00".into(),
         signature : "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSam1rOWg0YjhHaXJrTjdDN21FakVwQVlSaFcrc2hyUjNvRzlvelR3M0F0Z0NDbytsTTFIWWxqU0J0V3BlNmF6bUJYblJGZlVVZ05kcjg2QkZEc2VnQVFtM0lUSTNOMWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNDA0NzM5CWZpbGU6dGVzdC10YXVyaS1idWlsZC5hcHAudGFyLmd6CkhYekNzLytxdXJRa2RIMmdrRm9kT0xiaFNUaHYrQ3ppR3NHTEdQWGtIZzR0VWU3Q3JIYm9zRUtOb2VLMzhpYVI0L1VqQnM1dEF3NHdudXFVMmVUQ0JRPT0K".into()    
