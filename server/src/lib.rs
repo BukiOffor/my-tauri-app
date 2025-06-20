@@ -1,27 +1,6 @@
 use std::collections::HashMap;
-
 use reqwest::Client;
-use serde_json::{json, Value};
-
-
-
-// #[tokio::main]
-// async fn main() {
-    
-//     let client = Client::builder().user_agent("reqwest").build().expect("reqwest client could not be built");
-//     let repo = "BukiOffor/my-tauri-app";
-//     let url = format!("https://api.github.com/repos/{repo}/releases/latest");
-//     let response = client.get(&url).send().await.expect("Failed to fetch latest release");
-//     if !response.status().is_success() {
-//         panic!("Failed to fetch latest release: {}", response.status());
-//     }
-//     //println!("Response Status: {:?}", response);
-//     // let github_release = response.json::<Value>().await.expect("Failed to parse JSON response");
-//     // println!("GitHub Release: {}", github_release);
-//     let value = get_latest_release(&client, repo).await.expect("msg");
-//     println!("Tauri Response: {}", value);
-
-// }
+use serde_json::{Value, json};
 
 
 pub async fn create_tauri_response(client: &Client, github_release: &Value) -> Option<Value> {
@@ -49,18 +28,23 @@ pub async fn create_tauri_response(client: &Client, github_release: &Value) -> O
                     if !response_platforms.contains_key(*os_arch) {
                         response_platforms.insert(os_arch.to_string(), json!({}));
                     }
-                    response_platforms[*os_arch].as_object_mut()?.insert("url".to_string(), Value::String(browser_download_url.to_string()));
+                    response_platforms[*os_arch].as_object_mut()?.insert(
+                        "url".to_string(),
+                        Value::String(browser_download_url.to_string()),
+                    );
                 }
             } else if asset_name.ends_with(&format!("{extension}.sig")) {
                 let signature = match text_request(client, browser_download_url).await {
                     Ok(s) => s,
-                    _ => String::new()
+                    _ => String::new(),
                 };
                 for os_arch in os_archs.iter() {
                     if !response_platforms.contains_key(*os_arch) {
                         response_platforms.insert(os_arch.to_string(), json!({}));
                     }
-                    response_platforms[*os_arch].as_object_mut()?.insert("signature".to_string(), Value::String(signature.clone()));
+                    response_platforms[*os_arch]
+                        .as_object_mut()?
+                        .insert("signature".to_string(), Value::String(signature.clone()));
                 }
             }
         }
@@ -69,11 +53,13 @@ pub async fn create_tauri_response(client: &Client, github_release: &Value) -> O
 }
 
 pub async fn get_latest_release(client: &Client, repo: &str) -> Result<Value, reqwest::Error> {
-    // repo: e.g. elibroftw/google-keep-desktop-app
     let url = format!("https://api.github.com/repos/{repo}/releases/latest");
     let response = client.get(&url).send().await?;
     let github_release = response.json::<Value>().await?;
-    create_tauri_response(client, &github_release).await.ok_or(json!({})).or_else(|e| Ok(e))
+    create_tauri_response(client, &github_release)
+        .await
+        .ok_or(json!({}))
+        .or_else(|e| Ok(e))
 }
 
 pub fn remove_suffix<'a>(s: &'a str, suffix: &str) -> &'a str {

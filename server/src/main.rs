@@ -1,13 +1,12 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder, get};
 use actix_web::http::header;
+use actix_web::{App, HttpResponse, HttpServer, Responder, get, web};
 use reqwest::Client;
-use server::get_latest_release;
-use tokio::io::BufReader;
-use std::path::Path;
-use tokio_util::io::ReaderStream;
 use serde::Serialize;
+use server::get_latest_release;
+use std::path::Path;
 use tokio::fs as async_fs;
-
+use tokio::io::BufReader;
+use tokio_util::io::ReaderStream;
 
 #[derive(Serialize)]
 struct V2Response {
@@ -15,13 +14,9 @@ struct V2Response {
     notes: String,
     pub_date: String,
     url: String,
-    signature: String
+    signature: String,
 }
-
-
-
-const LATEST_VERSION: &str = "v1.0.0";
-
+const LATEST_VERSION: &str = "1.0.0";
 
 #[get("/v2/updates/{platform}/{version}")]
 async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
@@ -32,7 +27,7 @@ async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
     if version == LATEST_VERSION {
         return HttpResponse::NoContent().finish();
     }
-   HttpResponse::Ok().json(V2Response{
+    HttpResponse::Ok().json(V2Response{
         url: "https://my-tauri-app.onrender.com/download/test-tauri-build_aarch64.app.tar.gz".into(),
         //url: "http://127.0.0.1:8088/download/test-tauri-build_aarch64.app.tar.gz".into(), 
         version: "v1.0.0".into(),
@@ -42,8 +37,6 @@ async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
     })
 }
 
-
-
 #[get("/v1/updates/{platform}/{version}")]
 async fn tauri_update_v1(path: web::Path<(String, String)>) -> impl Responder {
     let (platform, version) = path.into_inner();
@@ -52,11 +45,18 @@ async fn tauri_update_v1(path: web::Path<(String, String)>) -> impl Responder {
     if version == LATEST_VERSION {
         return HttpResponse::NoContent().finish();
     }
-    let client = Client::builder().user_agent("reqwest").build().expect("reqwest client could not be built");
+    let client = Client::builder()
+        .user_agent("reqwest")
+        .build()
+        .expect("reqwest client could not be built");
     let repo = "BukiOffor/my-tauri-app";
-    let value = get_latest_release(&client, repo).await.expect("msg");
-    println!("Tauri Response: {}", value);
-    HttpResponse::Ok().json(value)
+    match get_latest_release(&client, repo).await {
+        Ok(value) => HttpResponse::Ok().json(value),
+        Err(e) => {
+            eprintln!("Error fetching latest release: {}", e);
+            HttpResponse::InternalServerError().body("Failed to fetch latest release")
+        }
+    }
 }
 
 #[get("/download/{filename}")]
@@ -68,7 +68,9 @@ async fn stream_zip_file(path: web::Path<String>) -> impl Responder {
     }
     let file = match async_fs::File::open(&path).await {
         Ok(f) => f,
-        Err(e) => return HttpResponse::InternalServerError().body(format!("Failed to open file: {e}")),
+        Err(e) => {
+            return HttpResponse::InternalServerError().body(format!("Failed to open file: {e}"));
+        }
     };
     let filename = path.file_name().unwrap().to_string_lossy();
     let stream = ReaderStream::new(BufReader::new(file));
@@ -80,7 +82,6 @@ async fn stream_zip_file(path: web::Path<String>) -> impl Responder {
         ))
         .streaming(stream)
 }
-
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
