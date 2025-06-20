@@ -37,6 +37,8 @@ const LATEST_VERSION: &str = "v1.2.0";
 #[get("/v1/updates/{platform}/{version}")]
 async fn tauri_update(path: web::Path<(String, String)>) -> impl Responder {
     let (platform, version) = path.into_inner();
+    println!("Request recived");
+    println!("platform: {}, version: {}", platform, version);
 
     if version == LATEST_VERSION {
         return HttpResponse::NoContent().finish();
@@ -87,7 +89,7 @@ async fn tauri_update(path: web::Path<(String, String)>) -> impl Responder {
 
 
 #[get("/v2/updates/{platform}/{version}")]
-async fn tauri_update_handler(path: web::Path<(String, String)>) -> impl Responder {
+async fn tauri_update_handler(_path: web::Path<(String, String)>) -> impl Responder {
    HttpResponse::Ok().json(V2Response{
         url: "https://mycompany.example.com/myapp/releases/myrelease.tar.gz".into(),
         version: "v1.0.1".into(),
