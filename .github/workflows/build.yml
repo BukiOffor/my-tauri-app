@@ -30,7 +30,7 @@ jobs:
       # TODO: use API to collect commit messages
       - name: Build Changelog
         id: build_changelog
-        run: echo "changelog=- ADD CHANGELOG" >> $GITHUB_OUTPUT
+        run: echo "changelog= This build releases some cool stuffs" >> $GITHUB_OUTPUT
 
       - name: Node.js setup
         uses: actions/setup-node@v3
@@ -71,7 +71,8 @@ jobs:
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
           # tauri-action replaces \_\_VERSION\_\_ with the app version
-          tagName: ${{ github.ref_name }}
+          #tagName: ${{ github.ref_name }}
+          tagName: "__VERSION__"
           releaseName: "Tauri Appv__VERSION__"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
