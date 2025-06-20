@@ -12,7 +12,7 @@ jobs:
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             rust_target: x86_64-unknown-linux-gnu
           - os: macos-latest
             rust_target: x86_64-apple-darwin
@@ -64,7 +64,7 @@ jobs:
         with:
           # tauri-action replaces \_\_VERSION\_\_ with the app version
           tagName: ${{ github.ref_name }}
-          releaseName: "[Unaffiliated] Test Appv__VERSION__"
+          releaseName: "Tauri Appv__VERSION__"
           releaseBody: |
             ${{steps.build_changelog.outputs.changelog}}
             See the assets to download this version and install.
