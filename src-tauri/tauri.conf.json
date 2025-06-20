@@ -61,6 +61,7 @@
       "active": true,
       "dialog": true,
       "endpoints": [
+        "http://localhost:8088/v2/updates/{{target}}/{{current_version}}",
         "https://my-tauri-app.onrender.com/v2/updates/{{target}}/{{current_version}}"
         ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhBMDZCRkUxNjE0RjlBNjMKUldSam1rOWg0YjhHaWhyN0E0QUU4T0hkMkljaHc2QlhTcExxcHhOL0w1c0MrZFpZaWdENGdjQncK"
