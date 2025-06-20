@@ -46,11 +46,14 @@ jobs:
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
+          echo "deb http://gb.archive.ubuntu.com/ubuntu jammy main" | sudo tee -a /etc/apt/sources.list
+
           sudo apt-get update
-          export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig
           sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
           xargs sudo apt install -y < environment/apt_packages.txt
           sudo apt-get install -y libsoup2.4-dev
+          
+          sudo sed -i '/jammy main/d' /etc/apt/sources.list
 
        
       - name: Install app dependencies and build web
