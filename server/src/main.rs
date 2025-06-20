@@ -1,5 +1,7 @@
 use actix_web::{web, App, HttpResponse, HttpServer, Responder, get};
 use actix_web::http::header;
+use reqwest::Client;
+use server::get_latest_release;
 use tokio::io::BufReader;
 use std::path::Path;
 use tokio_util::io::ReaderStream;
@@ -15,6 +17,7 @@ struct V2Response {
     url: String,
     signature: String
 }
+
 
 
 const LATEST_VERSION: &str = "v1.0.0";
@@ -39,6 +42,22 @@ async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
     })
 }
 
+
+
+#[get("/v1/updates/{platform}/{version}")]
+async fn tauri_update_v1(path: web::Path<(String, String)>) -> impl Responder {
+    let (platform, version) = path.into_inner();
+    println!("Request recived");
+    println!("platform: {}, version: {}", platform, version);
+    if version == LATEST_VERSION {
+        return HttpResponse::NoContent().finish();
+    }
+    let client = Client::builder().user_agent("reqwest").build().expect("reqwest client could not be built");
+    let repo = "BukiOffor/my-tauri-app";
+    let value = get_latest_release(&client, repo).await.expect("msg");
+    println!("Tauri Response: {}", value);
+    HttpResponse::Ok().json(value)
+}
 
 #[get("/download/{filename}")]
 async fn stream_zip_file(path: web::Path<String>) -> impl Responder {
@@ -68,6 +87,7 @@ async fn main() -> std::io::Result<()> {
     println!("🚀 Tauri Update server running on http://127.0.0.1:8088");
     HttpServer::new(|| {
         App::new()
+            .service(tauri_update_v1)
             .service(tauri_update_v2)
             .service(stream_zip_file)
     })
