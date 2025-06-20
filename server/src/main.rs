@@ -35,7 +35,7 @@ async fn tauri_update_v2(path: web::Path<(String, String)>) -> impl Responder {
         version: "v1.0.0".into(),
         notes: "Theses are some release notes".into(),
         pub_date: "2020-09-18T12:29:53+01:00".into(),
-        signature : "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSam1rOWg0YjhHaXJrTjdDN21FakVwQVlSaFcrc2hyUjNvRzlvelR3M0F0Z0NDbytsTTFIWWxqU0J0V3BlNmF6bUJYblJGZlVVZ05kcjg2QkZEc2VnQVFtM0lUSTNOMWdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNDA0NzM5CWZpbGU6dGVzdC10YXVyaS1idWlsZC5hcHAudGFyLmd6CkhYekNzLytxdXJRa2RIMmdrRm9kT0xiaFNUaHYrQ3ppR3NHTEdQWGtIZzR0VWU3Q3JIYm9zRUtOb2VLMzhpYVI0L1VqQnM1dEF3NHdudXFVMmVUQ0JRPT0K".into()    
+        signature : "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSam1rOWg0YjhHaWtKQ1d3ajgxazBwV0lQbXJ3RzZCWkpLeU1jQjJhTUhiQWFQcnVNVGpqNUhQRVBKcHBXdjk1UlFSVXdGZEIxM2JMd2FvR3ZSbzI5WENZMjZYaWE1RkFrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzUwNDIwNzkyCWZpbGU6dGVzdC10YXVyaS1idWlsZC5hcHAudGFyLmd6Ck50VjdwUFZBZkhZL0JCRDQ4RUk5bzRMZDFXbmNNYUpZU1BUMWxWZVF4ZE9MNGdVM3ZtdFgyRDZ2WTk1ZlNWSXJiUUVMUTluQ2svZG1paEJxTE80Z0FBPT0K".into()    
     })
 }
 
